@@ -1,0 +1,11 @@
+spring:
+  application.name: RDBaA
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: receipt-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    listener:
+      missing-topics-fatal: false
