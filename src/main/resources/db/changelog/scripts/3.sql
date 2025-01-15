@@ -19,8 +19,12 @@ ALTER TABLE receipt
 CREATE INDEX IF NOT EXISTS receipt_transaction_id_idx
     ON receipt(transaction_id);
 
+
+DROP INDEX IF EXISTS payment_amount_idx;
 CREATE INDEX IF NOT EXISTS payment_amount_idx
     ON payment(amount);
 
+
+DROP INDEX IF EXISTS receipt_status_idx;
 CREATE INDEX IF NOT EXISTS receipt_status_idx
     ON receipt(status);
