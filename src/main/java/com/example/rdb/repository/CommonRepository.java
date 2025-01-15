@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,6 +182,27 @@ public class CommonRepository {
         jdbcTemplate.update(sql, params);
     }
 
+    public void saveReceiptsBatch(List<ReceiptDto> receiptsBatch) {
+        String sql = "INSERT INTO receipt (id, date, status, transaction_id, order_id, customer_id, tracking_number) " +
+                "VALUES (:id, :date, :status, :transactionId, :orderId, :customerId, :trackingNumber) ON CONFLICT DO NOTHING";
+        List<SqlParameterSource> batchParams = new ArrayList<>(receiptsBatch.size());
+
+        for (var receiptDto : receiptsBatch) {
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("id", receiptDto.getId())
+                    .addValue("date", receiptDto.getDate())
+                    .addValue("status", receiptDto.getStatus())
+                    .addValue("transactionId", receiptDto.getPayment().getTransactionId())
+                    .addValue("orderId", receiptDto.getOrder().getOrderId())
+                    .addValue("customerId", receiptDto.getCustomer().getCustomerId())
+                    .addValue("trackingNumber", receiptDto.getLogistics().getTrackingNumber());
+            batchParams.add(params);
+        }
+
+        SqlParameterSource[] batchArray = batchParams.toArray(new SqlParameterSource[0]);
+        jdbcTemplate.batchUpdate(sql, batchArray);
+    }
+
     public ReceiptDto getReceiptById(String id) {
         String sql = "SELECT * FROM receipt WHERE id = :id";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), this::mapreceiptDto);
@@ -213,6 +235,27 @@ public class CommonRepository {
                 .addValue("expiryDate", payment.getCardDetails().getExpiryDate());
 
         jdbcTemplate.update(sql, params);
+    }
+
+    public void savePaymentsBatch(List<PaymentDto> paymentsBatch) {
+        String sql = "INSERT INTO payment (transaction_id, method, amount, currency, card_type, card_last_four_digits, card_expiry_date) " +
+                "VALUES (:transactionId, :method, :amount, :currency, :type, :lastFourDigits, :expiryDate) ON CONFLICT DO NOTHING";
+        List<SqlParameterSource> batchParams = new ArrayList<>(paymentsBatch.size());
+
+        for (var payment : paymentsBatch) {
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("transactionId", payment.getTransactionId())
+                    .addValue("method", payment.getMethod())
+                    .addValue("amount", payment.getAmount().getTotal())
+                    .addValue("currency", payment.getAmount().getCurrency())
+                    .addValue("type", payment.getCardDetails().getType())
+                    .addValue("lastFourDigits", payment.getCardDetails().getLastFourDigits())
+                    .addValue("expiryDate", payment.getCardDetails().getExpiryDate());
+            batchParams.add(params);
+        }
+
+        SqlParameterSource[] batchArray = batchParams.toArray(new SqlParameterSource[0]);
+        jdbcTemplate.batchUpdate(sql, batchArray);
     }
 
     public PaymentDto getPaymentByTransactionId(String transactionId) {
@@ -255,6 +298,26 @@ public class CommonRepository {
         }
     }
 
+    public void saveOrdersBatch(List<OrderDto> ordersBatch) {
+        String sql = "INSERT INTO \"order\" (id, item, shipping_address) VALUES (:orderId, CAST(:items AS jsonb), CAST(:shippingAddress AS jsonb)) ON CONFLICT DO NOTHING";
+        List<SqlParameterSource> batchParams = new ArrayList<>(ordersBatch.size());
+
+        try {
+            for (var order : ordersBatch) {
+                SqlParameterSource params = new MapSqlParameterSource()
+                        .addValue("orderId", order.getOrderId())
+                        .addValue("items", objectMapper.writeValueAsString(order.getItems()))
+                        .addValue("shippingAddress", objectMapper.writeValueAsString(order.getShippingAddress()));
+                batchParams.add(params);
+            }
+
+            SqlParameterSource[] batchArray = batchParams.toArray(new SqlParameterSource[0]);
+            jdbcTemplate.batchUpdate(sql, batchArray);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error serializing order to JSON", e);
+        }
+    }
+
     public OrderDto getOrderById(String orderId) {
         String sql = "SELECT * FROM \"order\" WHERE id = :orderId";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("orderId", orderId), this::mapOrder);
@@ -288,6 +351,26 @@ public class CommonRepository {
                 .addValue("pointsBalance", customer.getLoyalty().getCurrentBalance());
 
         jdbcTemplate.update(sql, params);
+    }
+
+    public void saveCustomersBatch(List<CustomerDto> customersBatch) {
+        String sql = "INSERT INTO customer (customer_id, name, email, phone, loyalty_points_earned, loyalty_points_balance) " +
+                "VALUES (:customerId, :name, :email, :phone, :pointsEarned, :pointsBalance) ON CONFLICT DO NOTHING";
+        List<SqlParameterSource> batchParams = new ArrayList<>(customersBatch.size());
+
+        for (CustomerDto customer : customersBatch) {
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("customerId", customer.getCustomerId())
+                    .addValue("name", customer.getName())
+                    .addValue("email", customer.getEmail())
+                    .addValue("phone", customer.getPhone())
+                    .addValue("pointsEarned", customer.getLoyalty().getPointsEarned())
+                    .addValue("pointsBalance", customer.getLoyalty().getCurrentBalance());
+            batchParams.add(params);
+        }
+
+        SqlParameterSource[] batchArray = batchParams.toArray(new SqlParameterSource[0]);
+        jdbcTemplate.batchUpdate(sql, batchArray);
     }
 
     public CustomerDto getCustomerById(String customerId) {
