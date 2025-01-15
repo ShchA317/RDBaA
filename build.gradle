@@ -24,19 +24,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.apache.kafka:kafka-clients:3.0.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-    implementation 'org.hibernate:hibernate-core:5.6.3.Final'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    implementation 'org.slf4j:slf4j-simple:1.7.30'
-    implementation 'org.springframework.kafka:spring-kafka:2.8.0'
-}
 
-tasks.named('test') {
-    useJUnitPlatform()
+    implementation 'org.apache.kafka:kafka-clients:3.0.0'
+    implementation 'org.springframework.kafka:spring-kafka:3.0.10'
+
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.3.5'
+    implementation 'org.postgresql:postgresql'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.liquibase:liquibase-core'
 }
