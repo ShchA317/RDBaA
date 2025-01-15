@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.ConsumerSeekAware;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,9 +27,11 @@ public class KafkaReceiptListener implements ConsumerSeekAware {
             containerFactory = "kafkaListenerContainerFactory",
             concurrency = "16"
     )
-    public void listen(String rawReceipt) throws JsonProcessingException {
-        ReceiptDto receiptDto = objectMapper.readValue(rawReceipt, ReceiptHolder.class).getReceipt();
-        service.saveReceipt(receiptDto);
+    public void listen(@Payload List<String> rawReceipts) throws JsonProcessingException {
+        for (String rawReceipt : rawReceipts) {
+            ReceiptDto receiptDto = objectMapper.readValue(rawReceipt, ReceiptHolder.class).getReceipt();
+            service.saveReceipt(receiptDto);
+        }
     }
 
     @Override
