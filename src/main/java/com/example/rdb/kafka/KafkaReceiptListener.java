@@ -27,11 +27,18 @@ public class KafkaReceiptListener implements ConsumerSeekAware {
             containerFactory = "kafkaListenerContainerFactory",
             concurrency = "16"
     )
-    public void listen(@Payload List<String> rawReceipts) throws JsonProcessingException {
-        for (String rawReceipt : rawReceipts) {
-            ReceiptDto receiptDto = objectMapper.readValue(rawReceipt, ReceiptHolder.class).getReceipt();
-            service.saveReceipt(receiptDto);
-        }
+    public void listen(@Payload List<String> rawReceipts) {
+        List<ReceiptDto> receiptDtosList = rawReceipts.stream()
+                .map(it -> {
+                    try {
+                        return objectMapper.readValue(it, ReceiptHolder.class).getReceipt();
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .toList();
+
+        service.saveReceiptsBatch(receiptDtosList);
     }
 
     @Override

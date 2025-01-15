@@ -14,7 +14,7 @@ public class ReceiptDto {
     private String id;
 
     @JsonProperty("date")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSSSSS]")
     private LocalDateTime date;
 
     @JsonProperty("status")
