@@ -1,11 +1,15 @@
 spring:
   application.name: RDBaA
+
+  datasource:
+    url: jdbc:postgresql://84.201.163.214:5432/postgres
+    username: service_account
+    password: service_account
+    driver-class-name: org.postgresql.Driver
+
   kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: receipt-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-    listener:
-      missing-topics-fatal: false
+    bootstrap-servers: 158.160.67.22:9092
+
+  liquibase:
+    change-log:
+      classpath:db/changelog/db.master.xml

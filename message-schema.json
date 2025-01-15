@@ -1,0 +1,68 @@
+{
+  "receipt": {
+    "id": "RCP5735913019350",
+    "date": "2004-07-28T10:44:41.621201",
+    "status": "PAID",
+    "payment": {
+      "method": "Bank Transfer",
+      "transaction_id": "TXN1129827294651",
+      "amount": {
+        "total": 191.42,
+        "currency": "USD"
+      },
+      "card_details": {
+        "type": "VISA",
+        "last_four_digits": "4631",
+        "expiry_date": "2025-12"
+      }
+    },
+    "order": {
+      "order_id": "ORD8360635049887",
+      "items": [
+        {
+          "item_id": "ITM9482",
+          "name": "shake",
+          "quantity": 4,
+          "unit_price": 88.8,
+          "total_price": 78.82
+        },
+        {
+          "item_id": "ITM8333",
+          "name": "such",
+          "quantity": 3,
+          "unit_price": 49.73,
+          "total_price": 59.36
+        },
+        {
+          "item_id": "ITM8302",
+          "name": "watch",
+          "quantity": 3,
+          "unit_price": 71.31,
+          "total_price": 30.29
+        }
+      ],
+      "shipping_address": {
+        "recipient_name": "Hannah Parker",
+        "address_line1": "215 Osborne Turnpike",
+        "address_line2": "Suite 227",
+        "city": "North Alexanderville",
+        "state": "GA",
+        "postal_code": "34774",
+        "country": "Aruba"
+      }
+    },
+    "customer": {
+      "customer_id": "CUST767074",
+      "name": "Richard Phillips",
+      "email": "stefaniegiles@example.org",
+      "phone": "739-912-7022",
+      "loyalty": {
+        "points_earned": 28,
+        "current_balance": 428
+      }
+    },
+    "logistics": {
+      "tracking_number": "ZO50897511"
+    }
+  }
+}
