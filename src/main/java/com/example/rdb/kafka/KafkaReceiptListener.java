@@ -22,7 +22,8 @@ public class KafkaReceiptListener implements ConsumerSeekAware {
     @KafkaListener(
             topics = "receipts",
             groupId = "service_account",
-            containerFactory = "kafkaListenerContainerFactory"
+            containerFactory = "kafkaListenerContainerFactory",
+            concurrency = "16"
     )
     public void listen(String rawReceipt) throws JsonProcessingException {
         ReceiptDto receiptDto = objectMapper.readValue(rawReceipt, ReceiptHolder.class).getReceipt();
