@@ -4,6 +4,7 @@ import com.example.rdb.dto.ReceiptDto;
 import com.example.rdb.repository.CommonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class ReceiptService {
     private final CommonRepository repository;
 
+    @Transactional
     public void saveReceipt(ReceiptDto receiptDto) {
         repository.saveCustomer(receiptDto.getCustomer());
         repository.savePayment(receiptDto.getPayment());
