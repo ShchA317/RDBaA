@@ -1,6 +1,19 @@
 spring:
   application.name: RDBaA
 
+  cassandra:
+    schema-action: CREATE_IF_NOT_EXISTS
+    request.timeout: 8s
+    connection:
+      connect-timeout: 8s
+      init-query-timeout: 8s
+
+    contact-points: localhost
+    port: 9042
+    keyspace-name: test_keyspace
+    local-datacenter: dc1
+
+
   datasource:
     url: jdbc:postgresql://84.201.163.214:5432/postgres
     username: service_account
