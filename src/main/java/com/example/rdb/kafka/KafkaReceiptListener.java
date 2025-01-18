@@ -2,7 +2,7 @@ package com.example.rdb.kafka;
 
 import com.example.rdb.dto.ReceiptDto;
 import com.example.rdb.dto.ReceiptHolder;
-import com.example.rdb.service.ReceiptService;
+import com.example.rdb.service.ReceiptServiceDenormalized;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class KafkaReceiptListener implements ConsumerSeekAware {
-    private final ReceiptService service;
+    private final ReceiptServiceDenormalized service;
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
