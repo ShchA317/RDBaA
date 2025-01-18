@@ -34,5 +34,7 @@ dependencies {
     implementation 'org.postgresql:postgresql'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+    implementation 'com.datastax.cassandra:cassandra-driver-core:2.1.9'
     implementation 'org.liquibase:liquibase-core'
 }
